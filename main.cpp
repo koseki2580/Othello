@@ -24,45 +24,6 @@ using namespace emscripten;
 #include "lib/player.hpp"
 using namespace std;
 
-string playGame(const Strategy player1_strategy, const Strategy player2_strategy)
-{
-    Othello othello;
-
-    Player player1(1, othello, player1_strategy, 2, Evaluation::CUSTOM);
-    Player player2(0, othello, player2_strategy);
-
-    while (!othello.isDone())
-    {
-        player1.put();
-        player2.put();
-    }
-    return othello.getWinner();
-}
-
-// int main()
-// {
-//     int n = 10;
-//     int white = 0;
-//     int black = 0;
-//     int draw = 0;
-//     for (int i = 0; i < n; ++i)
-//     {
-//         string win = playGame(Strategy::RANDOM, Strategy::RANDOM);
-//         printf("%d: %s\n", i, win.c_str());
-
-//         if (win == "White Win")
-//             white++;
-//         else if (win == "Black Win")
-//             black++;
-//         else
-//             draw++;
-//     }
-//     printf("白の勝率: %0.5f\n", (double)white / n);
-//     printf("黒の勝率: %0.5f\n", (double)black / n);
-//     printf("引き分け: %0.5f\n", (double)draw / n);
-//     return 0;
-// }
-
 class PlayOthello
 {
 public:
