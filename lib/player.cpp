@@ -3,6 +3,8 @@
 #include "action/action.hpp"
 #include "action/random_action.hpp"
 #include "action/mini_max_action.hpp"
+#include "action/alpha_beta_action.hpp"
+
 #include <memory>  // unique_ptrを使用するためのヘッダーファイル
 #include <vector>  // vectorを使用するためのヘッダーファイル
 #include <utility> // pairを使用するためのヘッダーファイル
@@ -24,12 +26,12 @@ Player::Player(int _id, Othello &_othello, const Strategy strategy, int depth, E
         this->strategy = make_unique<RandomAction>(_id);
         break;
     case Strategy::MINIMAX:
-        printf("MINIMAX");
         this->strategy = make_unique<MiniMaxAction>(_id, depth, evaluation);
         break;
+    case Strategy::ALPHABETA:
+        this->strategy = make_unique<AlphaBetaAction>(_id, depth, evaluation);
+        break;
     default:
-        printf("defualt");
-
         this->strategy = make_unique<RandomAction>(_id);
         break;
     }

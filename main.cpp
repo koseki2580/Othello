@@ -21,13 +21,15 @@ using namespace emscripten;
 #include "lib/action/action.hpp"
 #include "lib/action/random_action.hpp"
 #include "lib/action/mini_max_action.hpp"
+#include "lib/action/alpha_beta_action.hpp"
+
 #include "lib/player.hpp"
 using namespace std;
 
 class PlayOthello
 {
 public:
-    PlayOthello(bool isFirstPlayer, string strategy, string evaluation)
+    PlayOthello(bool isFirstPlayer, string strategy, int depth, string evaluation)
     {
         Strategy cpu_strategy;
         Evaluation cpu_evaluation;
@@ -61,7 +63,7 @@ public:
         // オセロボードを作成する
         othello = Othello();
         playerId = isFirstPlayer ? 0 : 1;
-        this->cpu = Player(playerId ^ 1, othello, cpu_strategy, 2, cpu_evaluation);
+        this->cpu = Player(playerId ^ 1, othello, cpu_strategy, depth, cpu_evaluation);
     }
 
     std::vector<pair<int, int>> getLegalActions()
@@ -102,10 +104,10 @@ extern "C"
         PlayOthello *instance;
     };
 
-    PlayOthelloWrapper *createPlayOthello(bool isFirstPlayer, const char *strategy, const char *evaluation)
+    PlayOthelloWrapper *createPlayOthello(bool isFirstPlayer, const char *strategy, const char *evaluation, int depth)
     {
         PlayOthelloWrapper *wrapper = new PlayOthelloWrapper;
-        wrapper->instance = new PlayOthello(isFirstPlayer, strategy, evaluation);
+        wrapper->instance = new PlayOthello(isFirstPlayer, strategy, depth, evaluation);
         return wrapper;
     }
 

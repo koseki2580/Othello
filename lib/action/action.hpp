@@ -12,7 +12,8 @@ using namespace std;
 enum class Strategy
 {
     RANDOM,
-    MINIMAX
+    MINIMAX,
+    ALPHABETA
 };
 extern const map<Strategy, string> strategyNames;
 
