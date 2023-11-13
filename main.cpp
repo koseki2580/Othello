@@ -41,6 +41,10 @@ public:
         {
             cpu_strategy = Strategy::MINIMAX;
         }
+        else if (strategy == "alphabeta")
+        {
+            cpu_strategy = Strategy::ALPHABETA;
+        }
         else
         {
             cpu_strategy = Strategy::RANDOM;
@@ -59,6 +63,7 @@ public:
         }
         cout << "Evaluation: " << evaluationNames.at(cpu_evaluation) << endl;
         cout << "Strategy: " << strategyNames.at(cpu_strategy) << endl;
+        cout << "depth: " << depth << endl;
 
         // オセロボードを作成する
         othello = Othello();
@@ -104,7 +109,7 @@ extern "C"
         PlayOthello *instance;
     };
 
-    PlayOthelloWrapper *createPlayOthello(bool isFirstPlayer, const char *strategy, const char *evaluation, int depth)
+    PlayOthelloWrapper *createPlayOthello(bool isFirstPlayer, const char *strategy, int depth, const char *evaluation)
     {
         PlayOthelloWrapper *wrapper = new PlayOthelloWrapper;
         wrapper->instance = new PlayOthello(isFirstPlayer, strategy, depth, evaluation);

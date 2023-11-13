@@ -22,7 +22,6 @@ Player::Player(int _id, Othello &_othello, const Strategy strategy, int depth, E
     switch (strategy)
     {
     case Strategy::RANDOM:
-        printf("random");
         this->strategy = make_unique<RandomAction>(_id);
         break;
     case Strategy::MINIMAX:

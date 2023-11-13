@@ -10,6 +10,7 @@ using namespace std;
 const map<Strategy, string> strategyNames = {
     {Strategy::RANDOM, "random"},
     {Strategy::MINIMAX, "minimax"},
+    {Strategy::ALPHABETA, "alphabeta"},
 };
 Action::Action(int value) : id(value)
 {
