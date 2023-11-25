@@ -19,6 +19,13 @@
   </head>
   <body>
     <h1>オセロ</h1>
+    <div class="note">
+      <h2>注意</h2>
+      <p>
+        このオセロゲームは、探索アルゴリズムの確認を目的として作成されました。
+        現在は強さをレベル表示していますが、いずれはアルゴリズムで選択できる様にします。
+      </p>
+    </div>
     <div id="settings-area">
       <label for="turn">先攻・後攻を選択：</label>
       <select id="turn" name="turn">
@@ -414,31 +421,31 @@
       }
     </script>
     <script>
-        playOthello.createPlayOthello = (
-          isFirstPlayer,
-          strategy,
-          depth,
-          evaluation
-        ) => {
+      playOthello.createPlayOthello = (
+        isFirstPlayer,
+        strategy,
+        depth,
+        evaluation
+      ) => {
         return syncOnMessage("createPlayOthello", {
           isFirstPlayer: isFirstPlayer,
           strategy: strategy,
           depth: depth,
           evaluation: evaluation,
         });
-        };
+      };
       playOthello.put = (y, x) => {
         return syncOnMessage("put", {
           y: y,
           x: x,
         });
-        };
+      };
       playOthello.cpuPut = () => {
         return syncOnMessage("cpuPut", {});
       };
       playOthello.deletePlayOthello = () => {
         return syncOnMessage("deletePlayOthello", {});
-        };
+      };
       playOthello.getLegalActions = () => {
         return syncOnMessage("getLegalActions", {});
       };
