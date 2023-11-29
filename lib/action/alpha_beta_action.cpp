@@ -82,7 +82,13 @@ pair<int, pair<int, int>> AlphaBetaAction::alphaBeta(int _id, Othello othello, i
         {
             beta = min(beta, value.first);
         }
-    }
+        if (beta <= alpha)
+        {
+            // αカット
+            // βカット
+            break;
+        }
+        }
 
     return nextPut;
 }
