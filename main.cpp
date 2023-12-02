@@ -22,6 +22,7 @@ using namespace emscripten;
 #include "lib/action/random_action.hpp"
 #include "lib/action/mini_max_action.hpp"
 #include "lib/action/alpha_beta_action.hpp"
+#include "lib/action/iterative_deepening_alpha_beta_action.hpp"
 
 #include "lib/player.hpp"
 using namespace std;
@@ -29,10 +30,12 @@ using namespace std;
 class PlayOthello
 {
 public:
-    PlayOthello(bool isFirstPlayer, string strategy, int depth, string evaluation)
+    PlayOthello(bool isFirstPlayer, string strategy, int depth, int maxTime, string evaluation)
     {
         Strategy cpu_strategy;
         Evaluation cpu_evaluation;
+        cout << maxTime << endl;
+        cout << strategy << endl;
         if (strategy == "random")
         {
             cpu_strategy = Strategy::RANDOM;
@@ -44,6 +47,10 @@ public:
         else if (strategy == "alphabeta")
         {
             cpu_strategy = Strategy::ALPHABETA;
+        }
+        else if (strategy == "iterative_deepening_alphabeta")
+        {
+            cpu_strategy = Strategy::ITERATIVE_DEEPENING_ALPHA_BETA;
         }
         else
         {
@@ -68,7 +75,7 @@ public:
         // オセロボードを作成する
         othello = Othello();
         playerId = isFirstPlayer ? 0 : 1;
-        this->cpu = Player(playerId ^ 1, othello, cpu_strategy, depth, cpu_evaluation);
+        this->cpu = Player(playerId ^ 1, othello, cpu_strategy, depth, maxTime, cpu_evaluation);
     }
 
     std::vector<pair<int, int>> getLegalActions()
@@ -98,7 +105,7 @@ public:
 
 private:
     Othello othello;
-    Player cpu = Player(0, othello, Strategy::RANDOM, 2, Evaluation::CUSTOM);
+    Player cpu = Player(0, othello, Strategy::RANDOM, 2, 1000, Evaluation::CUSTOM);
     int playerId;
 };
 
@@ -109,10 +116,10 @@ extern "C"
         PlayOthello *instance;
     };
 
-    PlayOthelloWrapper *createPlayOthello(bool isFirstPlayer, const char *strategy, int depth, const char *evaluation)
+    PlayOthelloWrapper *createPlayOthello(bool isFirstPlayer, const char *strategy, int depth, int maxTime, const char *evaluation)
     {
         PlayOthelloWrapper *wrapper = new PlayOthelloWrapper;
-        wrapper->instance = new PlayOthello(isFirstPlayer, strategy, depth, evaluation);
+        wrapper->instance = new PlayOthello(isFirstPlayer, strategy, depth, maxTime, evaluation);
         return wrapper;
     }
 
