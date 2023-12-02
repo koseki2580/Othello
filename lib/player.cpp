@@ -4,6 +4,7 @@
 #include "action/random_action.hpp"
 #include "action/mini_max_action.hpp"
 #include "action/alpha_beta_action.hpp"
+#include "action/iterative_deepening_alpha_beta_action.hpp"
 
 #include <memory>  // unique_ptrを使用するためのヘッダーファイル
 #include <vector>  // vectorを使用するためのヘッダーファイル
@@ -13,7 +14,7 @@
 
 #include "player.hpp"
 using namespace std;
-Player::Player(int _id, Othello &_othello, const Strategy strategy, int depth, Evaluation evaluation) : id(_id), othello(_othello)
+Player::Player(int _id, Othello &_othello, const Strategy strategy, int depth, int maxTime, Evaluation evaluation) : id(_id), othello(_othello)
 {
     id = _id;
     cout << "Player Evaluation: " << evaluationNames.at(evaluation) << endl;
@@ -29,6 +30,9 @@ Player::Player(int _id, Othello &_othello, const Strategy strategy, int depth, E
         break;
     case Strategy::ALPHABETA:
         this->strategy = make_unique<AlphaBetaAction>(_id, depth, evaluation);
+        break;
+    case Strategy::ITERATIVE_DEEPENING_ALPHA_BETA:
+        this->strategy = make_unique<IterativeDeepeningAlphaBetaAction>(_id, depth, maxTime, evaluation);
         break;
     default:
         this->strategy = make_unique<RandomAction>(_id);

@@ -13,7 +13,8 @@ enum class Strategy
 {
     RANDOM,
     MINIMAX,
-    ALPHABETA
+    ALPHABETA,
+    ITERATIVE_DEEPENING_ALPHA_BETA
 };
 extern const map<Strategy, string> strategyNames;
 

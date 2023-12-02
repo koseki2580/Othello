@@ -11,6 +11,7 @@ const map<Strategy, string> strategyNames = {
     {Strategy::RANDOM, "random"},
     {Strategy::MINIMAX, "minimax"},
     {Strategy::ALPHABETA, "alphabeta"},
+    {Strategy::ITERATIVE_DEEPENING_ALPHA_BETA, "iterative_deepening_alpha_beta"},
 };
 Action::Action(int value) : id(value)
 {

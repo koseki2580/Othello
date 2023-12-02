@@ -1,14 +1,15 @@
 #include <functional> // functionを使用するためのヘッダーファイル
-
+#include <chrono>
 #include <vector>  // vectorを使用するためのヘッダーファイル
 #include <utility> // pairを使用するためのヘッダーファイル
 #include "../othello.hpp"
 #include "../evaluation.hpp"
 #include "action.hpp"
-#include "alpha_beta_action.hpp"
-using namespace std;
+#include "iterative_deepening_alpha_beta_action.hpp"
+#include <unordered_map> // キャッシュに使用するためのヘッダーファイル
 
-AlphaBetaAction::AlphaBetaAction(int id, int depth, const Evaluation evaluation) : Action(id), depth(depth)
+IterativeDeepeningAlphaBetaAction::IterativeDeepeningAlphaBetaAction(int id, int depth, int maxTimeInMilliseconds, const Evaluation evaluation)
+    : Action(id), maxTimeInMilliseconds(maxTimeInMilliseconds), maxDepth(depth)
 {
     // 評価関数を選択
     switch (evaluation)
@@ -35,28 +36,43 @@ AlphaBetaAction::AlphaBetaAction(int id, int depth, const Evaluation evaluation)
     }
 }
 
-optional<pair<int, int>> AlphaBetaAction::action(Othello othello)
+optional<pair<int, int>> IterativeDeepeningAlphaBetaAction::action(Othello othello)
 {
-    auto result = alphaBeta(this->id, othello, 0, maxNum * -1, maxNum);
-    if (result.second == make_pair(-1, -1))
+    auto startTime = chrono::high_resolution_clock::now();
+    endTime = startTime + chrono::milliseconds(maxTimeInMilliseconds);
+
+    pair<int, pair<int, int>> bestMove = make_pair(-maxNum, make_pair(-1, -1));
+
+    int depth = 1;
+
+    while (chrono::high_resolution_clock::now() < endTime && depth <= maxDepth)
+    {
+        auto result = iterativeDeepeningAlphaBeta(this->id, othello, 0, -maxNum, maxNum, depth);
+        if (result.second != make_pair(-1, -1))
+        {
+            bestMove = result;
+        }
+        depth++;
+    }
+
+    if (bestMove.second == make_pair(-1, -1))
     {
         return nullopt;
     }
-    return result.second;
+    return bestMove.second;
 }
 
-pair<int, pair<int, int>> AlphaBetaAction::alphaBeta(int _id, Othello othello, int nowDepth, int alpha, int beta)
+pair<int, pair<int, int>> IterativeDeepeningAlphaBetaAction::iterativeDeepeningAlphaBeta(int _id, Othello othello, int nowDepth, int alpha, int beta, int maxDepth)
 {
-    if (nowDepth == depth)
+    if (nowDepth == maxDepth || chrono::high_resolution_clock::now() >= endTime)
     {
-        // 自分から見た評価を計算する
         return make_pair(evaluation(othello, this->id), make_pair(-1, -1));
     }
 
     vector<pair<int, int>> actions = othello.legalActions(_id);
 
     int _base = (nowDepth & 1) == 1 ? -1 : 1;
-    pair<int, pair<int, int>> nextPut = make_pair(maxNum * _base * -1, make_pair(-1, -1));
+    pair<int, pair<int, int>> nextPut = make_pair(-maxNum, make_pair(-1, -1));
 
     if (actions.empty())
     {
@@ -66,9 +82,9 @@ pair<int, pair<int, int>> AlphaBetaAction::alphaBeta(int _id, Othello othello, i
 
     for (const auto &action : actions)
     {
-        Othello next_board = othello.copyBoard();
-        next_board.put(_id, action);
-        pair<int, pair<int, int>> value = alphaBeta(_id ^ 1, next_board, nowDepth + 1, alpha, beta);
+        Othello nextBoard = othello.copyBoard();
+        nextBoard.put(_id, action);
+        pair<int, pair<int, int>> value = iterativeDeepeningAlphaBeta(_id ^ 1, nextBoard, nowDepth + 1, alpha, beta, maxDepth);
 
         if (_base * nextPut.first <= _base * value.first)
         {
@@ -82,10 +98,10 @@ pair<int, pair<int, int>> AlphaBetaAction::alphaBeta(int _id, Othello othello, i
         {
             beta = min(beta, value.first);
         }
+
+        // Alpha-Beta pruning
         if (beta <= alpha)
         {
-            // αカット
-            // βカット
             break;
         }
     }

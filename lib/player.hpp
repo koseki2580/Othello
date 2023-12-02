@@ -15,7 +15,7 @@ class Player
 {
 
 public:
-    Player(int _id, Othello &_othello, const Strategy strategy, int depth = 2, Evaluation evaluation = Evaluation::MASS_COUNT);
+    Player(int _id, Othello &_othello, const Strategy strategy, int depth = 2, int maxTime = 1000, Evaluation evaluation = Evaluation::MASS_COUNT);
 
     pair<int, int> put();
     Player &operator=(const Player &player);
