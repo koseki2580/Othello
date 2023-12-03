@@ -6,7 +6,6 @@
 #include "../evaluation.hpp"
 #include "action.hpp"
 #include "iterative_deepening_alpha_beta_action.hpp"
-#include <unordered_map> // キャッシュに使用するためのヘッダーファイル
 
 IterativeDeepeningAlphaBetaAction::IterativeDeepeningAlphaBetaAction(int id, int depth, int maxTimeInMilliseconds, const Evaluation evaluation)
     : Action(id), maxTimeInMilliseconds(maxTimeInMilliseconds), maxDepth(depth)

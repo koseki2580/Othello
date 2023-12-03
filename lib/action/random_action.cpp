@@ -11,7 +11,6 @@ RandomAction::RandomAction(int value) : Action(value)
 }
 optional<pair<int, int>> RandomAction::action(Othello othello)
 {
-    printf("random\n");
     vector<pair<int, int>> actions = othello.legalActions(this->id);
     if (actions.empty())
     {
