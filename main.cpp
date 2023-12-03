@@ -30,56 +30,11 @@ using namespace std;
 class PlayOthello
 {
 public:
-    PlayOthello(bool isFirstPlayer, string strategy, int depth, int maxTime, int maxCount, string evaluation)
+    PlayOthello(bool isFirstPlayer)
     {
-        Strategy cpu_strategy;
-        Evaluation cpu_evaluation;
-        cout << maxTime << endl;
-        cout << strategy << endl;
-        if (strategy == "random")
-        {
-            cpu_strategy = Strategy::RANDOM;
-        }
-        else if (strategy == "minimax")
-        {
-            cpu_strategy = Strategy::MINIMAX;
-        }
-        else if (strategy == "alphabeta")
-        {
-            cpu_strategy = Strategy::ALPHABETA;
-        }
-        else if (strategy == "iterative_deepening_alphabeta")
-        {
-            cpu_strategy = Strategy::ITERATIVE_DEEPENING_ALPHA_BETA;
-        }
-        else if (strategy == "primitive_monte_carlo")
-        {
-            cpu_strategy = Strategy::PRIMITIVE_MONTE_CARLO;
-        }
-        else
-        {
-            cpu_strategy = Strategy::RANDOM;
-        }
-        if (evaluation == "mass_count")
-        {
-            cpu_evaluation = Evaluation::MASS_COUNT;
-        }
-        else if (evaluation == "custom")
-        {
-            cpu_evaluation = Evaluation::CUSTOM;
-        }
-        else
-        {
-            cpu_evaluation = Evaluation::MASS_COUNT;
-        }
-        cout << "Evaluation: " << evaluationNames.at(cpu_evaluation) << endl;
-        cout << "Strategy: " << strategyNames.at(cpu_strategy) << endl;
-        cout << "depth: " << depth << endl;
-
         // オセロボードを作成する
         othello = Othello();
         playerId = isFirstPlayer ? 0 : 1;
-        this->cpu = Player(playerId ^ 1, othello, cpu_strategy, depth, maxTime, maxCount, cpu_evaluation);
     }
 
     std::vector<pair<int, int>> getLegalActions()
@@ -107,10 +62,76 @@ public:
         return this->othello.isDone();
     }
 
+    void setRandomAction()
+    {
+        strategy = Strategy::RANDOM;
+    }
+
+    void setMiniMaxAction(int depth, string evaluation)
+    {
+        setEvaluationFunction(evaluation);
+        this->depth = depth;
+        strategy = Strategy::MINIMAX;
+    }
+
+    void setAlphaBetaAction(int depth, string evaluation)
+    {
+        setEvaluationFunction(evaluation);
+        this->depth = depth;
+        strategy = Strategy::ALPHABETA;
+    }
+
+    void setIterativeDeepeningAlphaBetaAction(int depth, int maxTime, string evaluation)
+    {
+        setEvaluationFunction(evaluation);
+        this->depth = depth;
+        this->maxTime = maxTime;
+        strategy = Strategy::ITERATIVE_DEEPENING_ALPHA_BETA;
+    }
+
+    void setPrimitiveMonteCarloAction(int maxCount, int maxTime, int depth)
+    {
+        this->maxCount = maxCount;
+        this->maxTime = maxTime;
+        this->depth = depth;
+        strategy = Strategy::PRIMITIVE_MONTE_CARLO;
+    }
+
+    void decision()
+    {
+        cout << "Strategy: " << strategyNames.at(strategy) << endl;
+        cout << "Evaluation: " << evaluationNames.at(this->evaluation) << endl;
+        cout << "depth: " << depth << endl;
+        cout << "maxTime: " << maxTime << endl;
+        cout << "maxCount: " << maxCount << endl;
+        this->cpu = Player(playerId ^ 1, othello, strategy, depth, maxTime, maxCount, evaluation);
+    }
+
 private:
     Othello othello;
+    Strategy strategy = Strategy::RANDOM;
+    int depth;
+    int maxTime;
+    int maxCount;
+    Evaluation evaluation = Evaluation::MASS_COUNT;
     Player cpu = Player(0, othello, Strategy::RANDOM, 2, 1000, 100, Evaluation::CUSTOM);
     int playerId;
+
+    void setEvaluationFunction(string _evaluation)
+    {
+        if (_evaluation == "mass_count")
+        {
+            this->evaluation = Evaluation::MASS_COUNT;
+        }
+        else if (_evaluation == "custom")
+        {
+            this->evaluation = Evaluation::CUSTOM;
+        }
+        else
+        {
+            this->evaluation = Evaluation::MASS_COUNT;
+        }
+    }
 };
 
 extern "C"
@@ -120,11 +141,47 @@ extern "C"
         PlayOthello *instance;
     };
 
-    PlayOthelloWrapper *createPlayOthello(bool isFirstPlayer, const char *strategy, int depth, int maxTime, int maxCount, const char *evaluation)
+    PlayOthelloWrapper *createPlayOthello(bool isFirstPlayer)
     {
         PlayOthelloWrapper *wrapper = new PlayOthelloWrapper;
-        wrapper->instance = new PlayOthello(isFirstPlayer, strategy, depth, maxTime, maxCount, evaluation);
+        wrapper->instance = new PlayOthello(isFirstPlayer);
         return wrapper;
+    }
+
+    void setRandomAction(PlayOthelloWrapper *wrapper)
+    {
+        PlayOthello *playOthello = wrapper->instance;
+        playOthello->setRandomAction();
+    }
+
+    void setMiniMaxAction(PlayOthelloWrapper *wrapper, int depth, const char *evaluation)
+    {
+        PlayOthello *playOthello = wrapper->instance;
+        playOthello->setMiniMaxAction(depth, evaluation);
+    }
+
+    void setAlphaBetaAction(PlayOthelloWrapper *wrapper, int depth, const char *evaluation)
+    {
+        PlayOthello *playOthello = wrapper->instance;
+        playOthello->setAlphaBetaAction(depth, evaluation);
+    }
+
+    void setIterativeDeepeningAlphaBetaAction(PlayOthelloWrapper *wrapper, int depth, int maxTime, const char *evaluation)
+    {
+        PlayOthello *playOthello = wrapper->instance;
+        playOthello->setIterativeDeepeningAlphaBetaAction(depth, maxTime, evaluation);
+    }
+
+    void setPrimitiveMonteCarloAction(PlayOthelloWrapper *wrapper, int maxCount, int maxTime, int depth)
+    {
+        PlayOthello *playOthello = wrapper->instance;
+        playOthello->setPrimitiveMonteCarloAction(maxCount, maxTime, depth);
+    }
+
+    void decision(PlayOthelloWrapper *wrapper)
+    {
+        PlayOthello *playOthello = wrapper->instance;
+        playOthello->decision();
     }
 
     void deletePlayOthello(PlayOthelloWrapper *wrapper)

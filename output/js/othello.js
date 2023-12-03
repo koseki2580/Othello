@@ -4929,6 +4929,12 @@ var wasmImports = {
 var wasmExports = createWasm();
 var ___wasm_call_ctors = createExportWrapper('__wasm_call_ctors');
 var _createPlayOthello = Module['_createPlayOthello'] = createExportWrapper('createPlayOthello');
+var _setRandomAction = Module['_setRandomAction'] = createExportWrapper('setRandomAction');
+var _setMiniMaxAction = Module['_setMiniMaxAction'] = createExportWrapper('setMiniMaxAction');
+var _setAlphaBetaAction = Module['_setAlphaBetaAction'] = createExportWrapper('setAlphaBetaAction');
+var _setIterativeDeepeningAlphaBetaAction = Module['_setIterativeDeepeningAlphaBetaAction'] = createExportWrapper('setIterativeDeepeningAlphaBetaAction');
+var _setPrimitiveMonteCarloAction = Module['_setPrimitiveMonteCarloAction'] = createExportWrapper('setPrimitiveMonteCarloAction');
+var _decision = Module['_decision'] = createExportWrapper('decision');
 var _deletePlayOthello = Module['_deletePlayOthello'] = createExportWrapper('deletePlayOthello');
 var _getLegalActions = Module['_getLegalActions'] = createExportWrapper('getLegalActions');
 var _getBoardInfo = Module['_getBoardInfo'] = createExportWrapper('getBoardInfo');
@@ -4975,17 +4981,6 @@ function invoke_iii(index,a1,a2) {
   }
 }
 
-function invoke_iiiiiiii(index,a1,a2,a3,a4,a5,a6,a7) {
-  var sp = stackSave();
-  try {
-    return getWasmTableEntry(index)(a1,a2,a3,a4,a5,a6,a7);
-  } catch(e) {
-    stackRestore(sp);
-    if (!(e instanceof EmscriptenEH)) throw e;
-    _setThrew(1, 0);
-  }
-}
-
 function invoke_iiiiiiiii(index,a1,a2,a3,a4,a5,a6,a7,a8) {
   var sp = stackSave();
   try {
@@ -5001,6 +4996,28 @@ function invoke_ii(index,a1) {
   var sp = stackSave();
   try {
     return getWasmTableEntry(index)(a1);
+  } catch(e) {
+    stackRestore(sp);
+    if (!(e instanceof EmscriptenEH)) throw e;
+    _setThrew(1, 0);
+  }
+}
+
+function invoke_viii(index,a1,a2,a3) {
+  var sp = stackSave();
+  try {
+    getWasmTableEntry(index)(a1,a2,a3);
+  } catch(e) {
+    stackRestore(sp);
+    if (!(e instanceof EmscriptenEH)) throw e;
+    _setThrew(1, 0);
+  }
+}
+
+function invoke_viiii(index,a1,a2,a3,a4) {
+  var sp = stackSave();
+  try {
+    getWasmTableEntry(index)(a1,a2,a3,a4);
   } catch(e) {
     stackRestore(sp);
     if (!(e instanceof EmscriptenEH)) throw e;
@@ -5074,28 +5091,6 @@ function invoke_iiii(index,a1,a2,a3) {
   }
 }
 
-function invoke_viii(index,a1,a2,a3) {
-  var sp = stackSave();
-  try {
-    getWasmTableEntry(index)(a1,a2,a3);
-  } catch(e) {
-    stackRestore(sp);
-    if (!(e instanceof EmscriptenEH)) throw e;
-    _setThrew(1, 0);
-  }
-}
-
-function invoke_viiii(index,a1,a2,a3,a4) {
-  var sp = stackSave();
-  try {
-    getWasmTableEntry(index)(a1,a2,a3,a4);
-  } catch(e) {
-    stackRestore(sp);
-    if (!(e instanceof EmscriptenEH)) throw e;
-    _setThrew(1, 0);
-  }
-}
-
 function invoke_iiiii(index,a1,a2,a3,a4) {
   var sp = stackSave();
   try {
@@ -5133,6 +5128,17 @@ function invoke_viiiiiiii(index,a1,a2,a3,a4,a5,a6,a7,a8) {
   var sp = stackSave();
   try {
     getWasmTableEntry(index)(a1,a2,a3,a4,a5,a6,a7,a8);
+  } catch(e) {
+    stackRestore(sp);
+    if (!(e instanceof EmscriptenEH)) throw e;
+    _setThrew(1, 0);
+  }
+}
+
+function invoke_iiiiiiii(index,a1,a2,a3,a4,a5,a6,a7) {
+  var sp = stackSave();
+  try {
+    return getWasmTableEntry(index)(a1,a2,a3,a4,a5,a6,a7);
   } catch(e) {
     stackRestore(sp);
     if (!(e instanceof EmscriptenEH)) throw e;
