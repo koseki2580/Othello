@@ -15,7 +15,8 @@ enum class Strategy
     MINIMAX,
     ALPHABETA,
     ITERATIVE_DEEPENING_ALPHA_BETA,
-    PRIMITIVE_MONTE_CARLO
+    PRIMITIVE_MONTE_CARLO,
+    MONTE_CARLO_TREE_SEARCH,
 };
 extern const map<Strategy, string> strategyNames;
 

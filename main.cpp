@@ -96,15 +96,27 @@ public:
         this->depth = depth;
         strategy = Strategy::PRIMITIVE_MONTE_CARLO;
     }
+    void setMonteCarloTreeSearchAction(int threshold, int maxTime, double explorationWeight, int maxCount, int depth)
+    {
+        this->threshold = threshold;
+        this->maxTime = maxTime;
+        this->explorationWeight = explorationWeight;
+        this->maxCount = maxCount;
+        this->depth = depth;
+        strategy = Strategy::MONTE_CARLO_TREE_SEARCH;
+    }
 
-    void decision()
+    void
+    decision()
     {
         cout << "Strategy: " << strategyNames.at(strategy) << endl;
         cout << "Evaluation: " << evaluationNames.at(this->evaluation) << endl;
         cout << "depth: " << depth << endl;
         cout << "maxTime: " << maxTime << endl;
         cout << "maxCount: " << maxCount << endl;
-        this->cpu = Player(playerId ^ 1, othello, strategy, depth, maxTime, maxCount, evaluation);
+        cout << "threshold: " << threshold << endl;
+        cout << "explorationWeight: " << explorationWeight << endl;
+        this->cpu = Player(playerId ^ 1, othello, strategy, depth, maxTime, maxCount, threshold, explorationWeight, evaluation);
     }
 
 private:
@@ -113,8 +125,10 @@ private:
     int depth;
     int maxTime;
     int maxCount;
+    double explorationWeight;
+    int threshold;
     Evaluation evaluation = Evaluation::MASS_COUNT;
-    Player cpu = Player(0, othello, Strategy::RANDOM, 2, 1000, 100, Evaluation::CUSTOM);
+    Player cpu = Player(0, othello, Strategy::RANDOM, 2, 1000, 100, 20, 1.4, Evaluation::CUSTOM);
     int playerId;
 
     void setEvaluationFunction(string _evaluation)
@@ -176,6 +190,12 @@ extern "C"
     {
         PlayOthello *playOthello = wrapper->instance;
         playOthello->setPrimitiveMonteCarloAction(maxCount, maxTime, depth);
+    }
+
+    void setMonteCarloTreeSearchAction(PlayOthelloWrapper *wrapper, int threshold, int maxTime, double explorationWeight, int maxCount, int depth)
+    {
+        PlayOthello *playOthello = wrapper->instance;
+        playOthello->setMonteCarloTreeSearchAction(threshold, maxTime, explorationWeight, maxCount, depth);
     }
 
     void decision(PlayOthelloWrapper *wrapper)

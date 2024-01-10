@@ -6,6 +6,7 @@
 #include "action/alpha_beta_action.hpp"
 #include "action/iterative_deepening_alpha_beta_action.hpp"
 #include "action/primitive_monte_carlo_action.hpp"
+#include "action/monte_carlo_tree_search_action.hpp"
 
 #include <memory>  // unique_ptrを使用するためのヘッダーファイル
 #include <vector>  // vectorを使用するためのヘッダーファイル
@@ -15,7 +16,7 @@
 
 #include "player.hpp"
 using namespace std;
-Player::Player(int _id, Othello &_othello, const Strategy strategy, int depth, int maxTime, int maxCount, Evaluation evaluation) : id(_id), othello(_othello)
+Player::Player(int _id, Othello &_othello, const Strategy strategy, int depth, int maxTime, int maxCount, int threshold, double explorationWeight, Evaluation evaluation) : id(_id), othello(_othello)
 {
     id = _id;
     // cout << "Player Evaluation: " << evaluationNames.at(evaluation) << endl;
@@ -37,6 +38,9 @@ Player::Player(int _id, Othello &_othello, const Strategy strategy, int depth, i
         break;
     case Strategy::PRIMITIVE_MONTE_CARLO:
         this->strategy = make_unique<PrimitiveMonteCarloAction>(_id, maxCount, maxTime, depth);
+        break;
+    case Strategy::MONTE_CARLO_TREE_SEARCH:
+        this->strategy = make_unique<MonteCarloTreeSearchAction>(_id, threshold, maxTime, explorationWeight, maxCount, depth);
         break;
     default:
         this->strategy = make_unique<RandomAction>(_id);

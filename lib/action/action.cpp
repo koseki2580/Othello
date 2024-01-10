@@ -13,6 +13,7 @@ const map<Strategy, string> strategyNames = {
     {Strategy::ALPHABETA, "alphabeta"},
     {Strategy::ITERATIVE_DEEPENING_ALPHA_BETA, "iterative_deepening_alpha_beta"},
     {Strategy::PRIMITIVE_MONTE_CARLO, "primitive_monte_carlo"},
+    {Strategy::MONTE_CARLO_TREE_SEARCH, "monte_carlo_tree_search"},
 };
 Action::Action(int value) : id(value)
 {
